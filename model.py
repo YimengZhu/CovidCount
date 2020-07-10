@@ -27,8 +27,10 @@ class CascadeMultiTaskModel(tf.keras.Model):
         self.hl_prior2.add(PReLU())
         self.hl_prior2.add(Flatten())
         self.hl_prior2.add(Dense(512))
+        self.hl_prior2.add(PReLU())
         self.hl_prior2.add(Dense(256))
-        self.hl_prior2.add(Dense(num_class))
+        self.hl_prior2.add(PReLU())
+        self.hl_prior2.add(Dense(num_class,activation='sigmoid'))
 
         self.dense1 = tf.keras.Sequential()
         self.dense1.add(Conv2D(20, 7, padding='same'))
@@ -50,7 +52,7 @@ class CascadeMultiTaskModel(tf.keras.Model):
         self.dense2.add(Conv2DTranspose(16, 4, strides=2, padding='same'))
         self.dense2.add(PReLU())
         self.dense2.add(Conv2DTranspose(8, 4, strides=2, padding='same'))
-        self.dense2.add(Conv2D(1, 1, padding='same', activation='relu'))
+        self.dense2.add(Conv2D(1, 1, padding='same', activation='tanh'))
         
 
     def call(self, image):

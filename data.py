@@ -15,9 +15,12 @@ def load_and_preprocess_image(path):
     return preprocess_image(image)
 
 class MallDataset():
-    def __init__(self, data_folder, class_num):
-        image_folder = os.path.join(data_folder, 'frames', '*.jpg')
-        self.image_files = sorted(glob.glob(image_folder), key=lambda x: int(x[-8:-4]))
+    def __init__(self, data_folder, train_folder, val_folder, class_num):
+        train_folder = os.path.join(train_folder, '*.jpg')
+        self.train_image = sorted(glob.glob(train_folder), key=lambda x: int(x[-8:-4]))
+
+        val_folder = os.path.join(val_folder, '*.jpg')
+        self.val_image = sorted(glob.glob(val_folder), key=lambda x: int(x[-8:-4]))
 
         label_file = os.path.join(data_folder, 'mall_gt.mat')
         annotation = loadmat(label_file)
@@ -36,22 +39,36 @@ class MallDataset():
         heatmap = cv2.GaussianBlur(heatmap, (15, 15), 0)
         return heatmap
 
-    def train_generatore(self, batch_size):
-        idx_train = list(range(int(len(self.image_files) * 0.8)))
+    def train_generator(self, batch_size, Mode):
+        if Mode == 'train':
+            print("the program has entered trained")
+            image_files = self.train_image
+        elif Mode == 'validation':
+            print("the program has entered valid")
+            image_files = self.val_image
+        else:
+            print(Mode, "is not a valid Mode!")
 
+        index = list(range(int(len(image_files))))
         start_idx = 0
         while True:
-
-            if start_idx + batch_size >= len(idx_train):
-                np.random.shuffle(idx_train)
+            if start_idx + batch_size >= len(index):
+                np.random.shuffle(index)
+                print("the index list is shuffled")
                 i = 0
                 continue
 
             batch_input_img, batch_des_img, batch_des_cls = [], [], []
             for idx in range(start_idx, start_idx + batch_size):
-                input_img = load_and_preprocess_image(self.image_files[idx])
+                input_img = load_and_preprocess_image(image_files[index[idx]])
                 des_img = self._generate_heatmap(idx,input_img.shape[0],input_img.shape[1])
-                des_cls = self.count[idx] // self.class_distance
+                if Mode == 'train':
+                    des_cls = float(self.count[index[idx]] //self.class_distance)
+                elif Mode =='validation':
+                    des_cls = float(self.count[index[idx]+1600] //self.class_distance)
+                else:
+                    print("Mode is not valid")
+                    break
                 batch_input_img.append(input_img)
                 batch_des_img.append(des_img)
                 batch_des_cls.append(des_cls)

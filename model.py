@@ -52,7 +52,7 @@ class CascadeMultiTaskModel(tf.keras.Model):
         self.dense2.add(Conv2DTranspose(16, 4, strides=2, padding='same'))
         self.dense2.add(PReLU())
         self.dense2.add(Conv2DTranspose(8, 4, strides=2, padding='same'))
-        self.dense2.add(Conv2D(1, 1, padding='same', activation='tanh'))
+        self.dense2.add(Conv2D(1, 1, padding='same', activation='tanh')) #change the activation function here
         
 
     def call(self, image):

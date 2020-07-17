@@ -1,8 +1,8 @@
 clc;clear all;
-load('/home/prak12-2/mall_dataset/mall_gt.mat'); %load the ground truth
-img_path = '/home/prak12-2/mall_dataset/frames/';
-output_path = '/home/prak12-2/mall_dataset/density_maps/';
-output_img_path = '/home/prak12-2/mall_dataset/cropped_images/';
+load('/home/hongyi/py_ws/CovidCount/mall_dataset/mall_gt.mat'); %load the ground truth
+img_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/frames/';
+output_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/density_maps/';
+output_img_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/cropped_images/';
 num_images = 2000;
 N = 9 ; %randomly generate 9 patches from each original image
 for idx = 1:num_images
@@ -56,10 +56,12 @@ for idx = 1:num_images
         annPoints_sampled(:,2) = annPoints_sampled(:,2)-y1;
         img_index = strcat(num2str(idx),'_',num2str(i));
         im_sampled = imresize(im_sampled,[72,72]);
-        density_sampled = 55 * imresize(density_sampled, [18,18], 'bilinear'); %normalize
+        density_sampled = uint8(255 * imresize(density_sampled, [18,18], 'bilinear')); %normalize
         
-        imwrite(im_sampled, [output_img_path num2str(img_index) '.jpg'])
-        csvwrite([output_path num2str(img_index) '.csv'],density_sampled);
+        imwrite(im_sampled, [output_img_path num2str(img_index) '.jpg']);
+        
+        imwrite(density_sampled, [output_path num2str(img_index) '.bmp']);
+
         
     end
 end

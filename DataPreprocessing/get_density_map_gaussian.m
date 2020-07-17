@@ -1,7 +1,7 @@
 function im_density = get_density_map_gaussian(im,points,Mp) 
 
-
-im_density = zeros(size(im)); %create an empty map with size of input img
+[hi,wi,c]=size(im);
+im_density = zeros([hi,wi]); %create an empty map with size of input img
 [h,w] = size(im_density);% h stands for height, w stands for width
 
 if(size(points)==0)

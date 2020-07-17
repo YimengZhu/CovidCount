@@ -75,9 +75,22 @@ for i = 1:num_images
 
         density_map = 255.0*get_density_map_gaussian(im_sampled, annPoints_sampled, img_perspective);
         
-        imwrite(im_sampled, [output_img_path num2str((i-1)*4+j) '.jpg']);
+        img_index = (i-1)*4+j;
         
-        imwrite(density_map, [output_density_path num2str((i-1)*4+j) '.bmp']);
+        if(img_index<10)
+            str_idx = strcat('000', num2str(img_index));
+        elseif(img_index>=10 && img_index<=99)
+            str_idx = strcat('00', num2str(img_index));
+        elseif(img_index>=100 && img_index<=999)
+            str_idx = strcat('0', num2str(img_index));
+        else
+            str_idx = num2str(img_index);
+        end
+        
+        
+        imwrite(im_sampled, [output_img_path str_idx '.jpg']);
+        
+        imwrite(density_map, [output_density_path str_idx '.bmp']);
         count((i-1)*4+j)=count_sampled;
         
         

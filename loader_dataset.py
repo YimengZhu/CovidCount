@@ -33,18 +33,21 @@ def one_hot_encoder(cls_num):
 
 class MallDataset():
     def __init__(self, data_folder, class_num):
-        image_folder = os.path.join(data_folder, 'frames', '*.jpg')
-        density_folder = os.path.join(data_folder, 'den_maps', '*.bmp')
+        image_folder = os.path.join(data_folder, 'cropped_images', '*.jpg')
+        density_folder = os.path.join(data_folder, 'density_maps', '*.bmp')
         image_files = sorted(glob.glob(image_folder), key=lambda x: int(x[-8:-4]))
         density_maps = sorted(glob.glob(density_folder), key=lambda x: int(x[-8:-4]))
         self.all_image_paths = list(image_files)
         self.all_density_paths = list(density_maps)
         self.all_image_paths = [str(path) for path in self.all_image_paths]
         self.all_density_paths = [str(path) for path in self.all_density_paths]
-        label_file = os.path.join(data_folder, 'mall_gt.mat')
+        label_file = os.path.join(data_folder, 'count.mat')
         annotation = loadmat(label_file)
         self.count = annotation['count']
-        max_count, min_count = np.amax(self.count), np.amin(self.count)
+        #annotation = loadmat(label_file)
+        #self.count = annotation['count']
+        #max_count, min_count = np.amax(self.count), np.amin(self.count)
+        max_count, min_count = 31, 0
         self.class_distance = (max_count - min_count) // class_num +1
         self.cls = (self.count - min_count)//self.class_distance # min=13 max=53 0-10
         self.cls = [one_hot_encoder(cls_num) for cls_num in self.cls]

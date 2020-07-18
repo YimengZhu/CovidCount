@@ -1,8 +1,8 @@
 clc;clear all;
-load('/home/hongyi/py_ws/CovidCount/mall_dataset/mall_gt.mat'); %load the ground truth
-img_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/frames/';
-output_img_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/cropped_images/';
-output_density_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/density_maps/';
+load('/home/prak12-2/CovidCount/mall_dataset/mall_gt.mat'); %load the ground truth
+img_path = '/home/prak12-2/CovidCount/mall_dataset/frames/';
+output_img_path = '/home/prak12-2/CovidCount/mall_dataset/cropped_images/';
+output_density_path = '/home/prak12-2/CovidCount/mall_dataset/density_maps/';
 num_images = 2000;
 count = zeros([8000,1]);
 

@@ -22,15 +22,15 @@ class CascadeMultiTaskModel(tf.keras.Model):
         self.hl_prior1.add(Conv2D(8, 7, padding='same'))
         self.hl_prior1.add(PReLU())
 
-        self.hl_prior2 = tf.keras.Sequential()
-        self.hl_prior2.add(Conv2D(4, 1, padding='same'))
-        self.hl_prior2.add(PReLU())
-        self.hl_prior2.add(Flatten())
-        self.hl_prior2.add(Dense(512))
-        self.hl_prior2.add(PReLU())
-        self.hl_prior2.add(Dense(256))
-        self.hl_prior2.add(PReLU())
-        self.hl_prior2.add(Dense(num_class,activation='sigmoid'))
+       # self.hl_prior2 = tf.keras.Sequential()
+       # self.hl_prior2.add(Conv2D(4, 1, padding='same'))
+       # self.hl_prior2.add(PReLU())
+       # self.hl_prior2.add(Flatten())
+       # self.hl_prior2.add(Dense(512))
+       # self.hl_prior2.add(PReLU())
+       # self.hl_prior2.add(Dense(256))
+       # self.hl_prior2.add(PReLU())
+       # self.hl_prior2.add(Dense(num_class,activation='sigmoid'))
 
         self.dense1 = tf.keras.Sequential()
         self.dense1.add(Conv2D(20, 7, padding='same'))
@@ -58,10 +58,10 @@ class CascadeMultiTaskModel(tf.keras.Model):
     def call(self, image):
         shared_feature = self.shared_layer(image)
         hl_prior1 = self.hl_prior1(shared_feature)
-        hl_cls = self.hl_prior2(hl_prior1)
+        # hl_cls = self.hl_prior2(hl_prior1)
         dense1 = self.dense1(shared_feature)
         dense_map = self.dense2(tf.concat([hl_prior1, dense1],3))
-        return hl_cls, dense_map
+        return dense_map
 
 
 

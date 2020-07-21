@@ -1,11 +1,10 @@
 clc;clear all;
-load('/home/hongyi/py_ws/CovidCount/mall_dataset/mall_gt.mat'); %load the ground truth
-img_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/frames/';
-output_img_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/cropped_images/';
-output_density_path = '/home/hongyi/py_ws/CovidCount/mall_dataset/density_maps/';
+load('/home/prak12-2/CovidCount/mall_dataset/mall_gt.mat'); %load the ground truth
+img_path = '/home/prak12-2/CovidCount/mall_dataset/frames/';
+output_img_path = '/home/prak12-2/CovidCount/mall_dataset/cropped_images/';
+output_density_path = '/home/prak12-2/CovidCount/mall_dataset/density_maps/';
 num_images = 2000;
-count = zeros([8000,1]);
-random_images = 8; 
+random_images = 9; 
 img_index = 0;
 count = zeros([2000*random_images,1]);
 
@@ -28,11 +27,10 @@ for i = 1:num_images
     
     img = imread(input_img_name);
     XY = frame{i}.loc;
-    [w,h,c] = size(img);
+    [h,w,c] = size(img);
     
-    img_perspective = zeros(h,w);
-    for y=1:240
-        img_perspective(y,:) = 0.1243*y +24.49;
+    if(c==3)
+	img = rgb2gray(img);
     end
 
 
@@ -46,16 +44,16 @@ for i = 1:num_images
         x1 = xc - 1/4*w + 1; x2 = xc + 1/4*w;
         y1 = yc - 1/4*h + 1; y2 = yc + 1/4*h;
 
-        im_sampled = img(x1:x2, y1:y2, :);
-        annPoints_sampled = XY(XY(:,1)>y1& ...
-        XY(:,1)<y2 & ...
-        XY(:,2)>x1 & ...
-        XY(:,2)<x2,:);
+        im_sampled = img(y1:y2, x1:x2);
+        annPoints_sampled = XY(XY(:,1)>x1& ...
+        XY(:,1)<x2 & ...
+        XY(:,2)>y1 & ...
+        XY(:,2)<y2,:);
         [count_sampled,dim] = size(annPoints_sampled);
-        annPoints_sampled(:,1) = annPoints_sampled(:,1)-y1;
-        annPoints_sampled(:,2) = annPoints_sampled(:,2)-x1;
+        annPoints_sampled(:,1) = annPoints_sampled(:,1)-x1;
+        annPoints_sampled(:,2) = annPoints_sampled(:,2)-y1;
 
-        density_map = 255.0*get_density_map_gaussian(im_sampled, annPoints_sampled, img_perspective);
+        density_map = get_density_map_gaussian(im_sampled, annPoints_sampled);
         
         img_index = img_index + 1;
         
@@ -82,6 +80,6 @@ for i = 1:num_images
 
 end
 
-
+save('count_random_aug', 'count')
    
     

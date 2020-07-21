@@ -1,7 +1,6 @@
-function im_density = get_density_map_gaussian(im,points,Mp) 
+function im_density = get_density_map_gaussian(im,points) 
 
-[hi,wi,c]=size(im);
-im_density = zeros([hi,wi]); %create an empty map with size of input img
+im_density = zeros(size(im)); %create an empty map with size of input img
 [h,w] = size(im_density);% h stands for height, w stands for width
 
 if(size(points)==0)
@@ -16,9 +15,7 @@ if(length(points(:,1))==1) %if there contains only one annotated point in img, s
 end
 for j = 1:length(points) 	
     f_sz = 15;
-    m_x = max(1,min(w,round(points(j,1))));
-    m_y = max(1,min(h,round(points(j,2))));
-    sigma = Mp(m_y,m_x);
+    sigma = 4.0;
     H = fspecial('Gaussian',[f_sz, f_sz],sigma);  %fspecial ---- a gussian filter with window size f_sz and sigma
     x = min(w,max(1,abs(int32(floor(points(j,1)))))); 
     y = min(h,max(1,abs(int32(floor(points(j,2))))));
